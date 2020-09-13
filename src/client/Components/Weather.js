@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import '../Styles/weather.css';
 
 class Weather extends React.Component {
 

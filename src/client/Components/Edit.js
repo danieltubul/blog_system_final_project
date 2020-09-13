@@ -1,5 +1,4 @@
 import React from 'react';
-import "../Styles/header.css";
 import axios from "axios";
 import PostForm from "./PostForm";
 
@@ -9,21 +8,22 @@ class Edit extends React.Component {
         super(props)
         this.state = {
             post: null,
-            post_id: null
+            post_id: null,
+            post_tags: [],
         };
     }
 
     componentDidMount() {
-        let id = this.props.match.params.id;
+        let id = this.props.post_id;
         this.setState({
             post_id: id,
 
         })
-        console.log(this.props.user)
 
         axios.get(`/posts/${id}`).then(res => {
             this.setState({
                 post: res.data,
+                post_tags: res.data.tags,
             });
         })
 
@@ -31,22 +31,21 @@ class Edit extends React.Component {
 
     handleSubmit = (data) => { // create new endpoint
         const id = this.state.post_id
-        console.log(data)
         axios.put(`/posts/${id}`, data).then(res => {
-            this.props.history.push('/')
-
         })
+        this.props.history.push('/')
     }
 
     render() {
-        if(!this.state.post) return null
+        if(!this.state.post || !this.state.post_tags) return null
         return (
-            <div>
-                <h1>Edit post</h1>
+            <div style={{width: "100%"}}>
                 <PostForm  handleSubmit={this.handleSubmit}
                            title={this.state.post.title}
                            content={this.state.post.content}
                            author={this.state.post.author}
+                           post_tags={this.state.post_tags}
+                           tags={this.props.tags}
                            buttonText={"Edit"}/>
             </div>
         )
